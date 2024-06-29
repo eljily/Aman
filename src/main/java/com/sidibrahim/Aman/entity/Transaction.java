@@ -1,33 +1,37 @@
 package com.sidibrahim.Aman.entity;
 
-import com.sidibrahim.Aman.enums.Role;
+import com.sidibrahim.Aman.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class User {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
-    private String email;
-    private String phoneNumber;
-    private String password;
+    private String note;
+    private String customerName;
+    private String customerPhoneNumber;
+    private TransactionType type;
+    private BigDecimal amount;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
-    private Role role;
-
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
+
+    @ManyToOne
+    @JoinColumn(name = "agent_id")
+    private User agent;
+
+
 
 }

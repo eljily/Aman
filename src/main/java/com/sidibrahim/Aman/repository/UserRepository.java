@@ -1,4 +1,7 @@
 package com.sidibrahim.Aman.repository;
 
-public class UserRepository {
+import com.sidibrahim.Aman.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
 }
