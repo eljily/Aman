@@ -1,7 +1,9 @@
 package com.sidibrahim.Aman.controller;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("api/transactions")
+@RestController
+@RequestMapping("/api/transactions")
 public class TransactionController {
 }
