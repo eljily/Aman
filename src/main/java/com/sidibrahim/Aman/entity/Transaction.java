@@ -20,6 +20,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String note;
+    private String customerOtp;
     private String customerName;
     private String customerPhoneNumber;
     private TransactionType type;
@@ -33,7 +34,5 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "agent_id")
     private User agent;
-
-
 
 }
