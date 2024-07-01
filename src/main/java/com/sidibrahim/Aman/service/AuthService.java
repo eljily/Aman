@@ -20,7 +20,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }
-
+    //TODO : NEED ENHANCEMENT HERE. THROW ALL NECESSARY EXCEPTIONS TO COVER ALL H CASES.
     public AuthResponseDto login(AuthRequestDto authRequestDto) {
         AuthResponseDto authResponseDto = new AuthResponseDto();
         Authentication authentication = authenticationManager.authenticate(
