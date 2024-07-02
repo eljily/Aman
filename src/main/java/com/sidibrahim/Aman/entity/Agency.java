@@ -1,6 +1,7 @@
 package com.sidibrahim.Aman.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,8 +22,14 @@ public class Agency {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "name cant be null")
     private String name;
+
+    @NotNull(message = "address cant be null")
     private String address;
+
+    @NotNull(message = "agencyCode cant be null")
+    private String agencyCode;
 
     @OneToMany(mappedBy = "agency")
     private List<User> users;

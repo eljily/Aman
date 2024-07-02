@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +32,10 @@ public class User implements UserDetails {
     private String email;
     private String phoneNumber;
     private String password;
+
+    @CreationTimestamp
     private LocalDateTime createDate;
+    @UpdateTimestamp
     private LocalDateTime updateDate;
 
     @Enumerated(EnumType.STRING)

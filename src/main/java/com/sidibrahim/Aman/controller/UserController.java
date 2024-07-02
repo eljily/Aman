@@ -1,7 +1,9 @@
 package com.sidibrahim.Aman.controller;
 
+import com.sidibrahim.Aman.dto.UserDto;
 import com.sidibrahim.Aman.entity.User;
 import com.sidibrahim.Aman.exception.GenericException;
+import com.sidibrahim.Aman.mapper.UserMapper;
 import com.sidibrahim.Aman.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,12 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/test")
@@ -34,14 +38,14 @@ public class UserController {
     /* Only SuperAdmin or AgencyOwner can create a user . */
     //Todo : please remove logic to the Service
     @PreAuthorize("!hasAuthority('AGENT')")
-    public ResponseEntity<?> save(@RequestBody User user) {
-        Optional<User> userByPhoneNumber = userRepository.findUserByPhoneNumber(user.getPhoneNumber());
+    public ResponseEntity<?> save(@RequestBody UserDto userDto) {
+        Optional<User> userByPhoneNumber = userRepository.findUserByPhoneNumber(userDto.getPhoneNumber());
         if (userByPhoneNumber.isPresent()) {
-            throw new GenericException("User Already Exist With PhoneNumber : " + user.getPhoneNumber());
+            throw new GenericException("User Already Exist With PhoneNumber : " + userDto.getPhoneNumber());
         }
-        String userPassword = user.getPassword();
-        user.setPassword(passwordEncoder.encode(userPassword));
-        user.setCreateDate(LocalDateTime.now());
+        String userPassword = userDto.getPassword();
+        userDto.setPassword(passwordEncoder.encode(userPassword));
+        User user = userMapper.toUser(userDto);
         return ResponseEntity.ok(userRepository.save(user));
     }
 }
