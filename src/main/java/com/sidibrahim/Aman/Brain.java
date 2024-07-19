@@ -2,6 +2,7 @@ package com.sidibrahim.Aman;
 
 import com.sidibrahim.Aman.entity.User;
 import com.sidibrahim.Aman.repository.UserRepository;
+import com.sidibrahim.Aman.service.UserService;
 import com.sidibrahim.Aman.util.AdminConfig;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,6 +25,7 @@ public class Brain {
 	CommandLineRunner commandLineRunner(UserRepository userRepository, PasswordEncoder passwordEncoder,
 										AdminConfig adminConfig){
 		return args ->{
+
 			Optional<User> user = userRepository.findUserByPhoneNumber(adminConfig.getSuperAdminPhoneNumber());
 			if(user.isEmpty()){
 				userRepository.save(User.builder()

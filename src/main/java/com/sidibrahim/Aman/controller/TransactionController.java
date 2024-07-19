@@ -24,7 +24,7 @@ public class TransactionController {
     @Transactional
     //TODO: MOVE LOGIC TO SERVICE  USE DTOS.
     public ResponseEntity<?> addTransaction(@RequestBody Transaction transaction, @AuthenticationPrincipal User user) {
-        System.out.println("Connected user :"+user.getName());
+        System.out.println("New Transaction Added By : "+user.getName());
         transaction.setAgency(user.getAgency());
         transaction.setCreateDate(LocalDateTime.now());
         transaction.setAgent(user);

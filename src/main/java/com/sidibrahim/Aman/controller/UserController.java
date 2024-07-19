@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,9 +29,10 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "test";
+    @GetMapping()
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok(userRepository.findAll());
     }
 
     @PostMapping
