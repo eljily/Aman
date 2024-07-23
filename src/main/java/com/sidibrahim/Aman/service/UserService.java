@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -23,10 +24,10 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDto addUser(UserDto userDto){
+    public UserDto addUser(UserDto userDto) {
         Optional<User> user = userRepository.findUserByPhoneNumber(userDto.getPhoneNumber());
-        if(user.isPresent()){
-         throw new GenericException("User Already Exists");
+        if (user.isPresent()) {
+            throw new GenericException("User Already Exists");
         }
         String userPassword = userDto.getPassword();
         userDto.setPassword(passwordEncoder.encode(userPassword));
@@ -34,7 +35,7 @@ public class UserService {
         return userMapper.toUserDto(userRepository.save(userEntity));
     }
 
-    public List<UserDto> getAllUsers(){
+    public List<UserDto> getAllUsers() {
         return userMapper.toUserDtoList(userRepository.findAll());
     }
 }
