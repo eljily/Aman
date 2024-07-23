@@ -5,6 +5,7 @@ import com.sidibrahim.Aman.entity.User;
 import com.sidibrahim.Aman.exception.GenericException;
 import com.sidibrahim.Aman.mapper.UserMapper;
 import com.sidibrahim.Aman.repository.UserRepository;
+import com.sidibrahim.Aman.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,35 +20,22 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping()
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public ResponseEntity<List<User>> getAllUsers(){
-        return ResponseEntity.ok(userRepository.findAll());
+    public ResponseEntity<List<UserDto>> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping
     @Transactional
-    /* Only SuperAdmin or AgencyOwner can create a user . */
-    //Todo : please remove logic to the Service
     @PreAuthorize("!hasAuthority('AGENT')")
-    public ResponseEntity<?> save(@RequestBody UserDto userDto) {
-        Optional<User> userByPhoneNumber = userRepository.findUserByPhoneNumber(userDto.getPhoneNumber());
-        if (userByPhoneNumber.isPresent()) {
-            throw new GenericException("User Already Exist With PhoneNumber : " + userDto.getPhoneNumber());
-        }
-        String userPassword = userDto.getPassword();
-        userDto.setPassword(passwordEncoder.encode(userPassword));
-        User user = userMapper.toUser(userDto);
-        return ResponseEntity.ok(userRepository.save(user));
+    public ResponseEntity<UserDto> save(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.addUser(userDto));
     }
 }
