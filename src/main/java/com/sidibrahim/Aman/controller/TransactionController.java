@@ -3,46 +3,41 @@ package com.sidibrahim.Aman.controller;
 import com.sidibrahim.Aman.entity.Transaction;
 import com.sidibrahim.Aman.entity.User;
 import com.sidibrahim.Aman.repository.TransactionRepository;
+import com.sidibrahim.Aman.service.TransactionService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
-    //TODO : NEVER USE REPOSITORY IN CONTROLLER AND ALWAYS RETURN DTOS
-    private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
 
-    public TransactionController(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
     }
 
     @PostMapping
-    @Transactional
-    //TODO: MOVE LOGIC TO SERVICE  USE DTOS.
-    public ResponseEntity<?> addTransaction(@RequestBody Transaction transaction, @AuthenticationPrincipal User user) {
-        System.out.println("New Transaction Added By : "+user.getName());
-        transaction.setAgency(user.getAgency());
-        transaction.setCreateDate(LocalDateTime.now());
-        transaction.setAgent(user);
-        return ResponseEntity.ok(transactionRepository.save(transaction));
+    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(transactionService.save(transaction,user));
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllTransactions() {
-        return ResponseEntity.ok(transactionRepository.findAll());
+    public ResponseEntity<List<Transaction>> getAllTransactions() {
+        return ResponseEntity.ok(transactionService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTransactionById(@PathVariable Long id) {
-        return ResponseEntity.ok(transactionRepository.findById(id));
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
+        return ResponseEntity.ok(transactionService.findById(id));
     }
 
     @GetMapping("/{id}/agent")
-    public ResponseEntity<?> getTransactionByAgent(@PathVariable Long id) {
-        return ResponseEntity.ok(transactionRepository.findByAgentId(id));
+    public ResponseEntity<List<Transaction>> getTransactionsByAgent(@PathVariable Long id) {
+        return ResponseEntity.ok(transactionService.findByAgent(id));
     }
 }

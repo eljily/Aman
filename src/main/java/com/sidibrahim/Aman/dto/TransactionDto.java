@@ -2,7 +2,6 @@ package com.sidibrahim.Aman.dto;
 
 import com.sidibrahim.Aman.enums.TransactionType;
 import lombok.*;
-import org.springframework.web.service.annotation.GetExchange;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
