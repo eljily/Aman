@@ -1,5 +1,6 @@
 package com.sidibrahim.Aman.controller;
 
+import com.sidibrahim.Aman.dto.TransactionDto;
 import com.sidibrahim.Aman.entity.Transaction;
 import com.sidibrahim.Aman.entity.User;
 import com.sidibrahim.Aman.repository.TransactionRepository;
@@ -22,22 +23,22 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction transaction, @AuthenticationPrincipal User user) {
+    public ResponseEntity<TransactionDto> addTransaction(@RequestBody Transaction transaction, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(transactionService.save(transaction,user));
     }
 
     @GetMapping
-    public ResponseEntity<List<Transaction>> getAllTransactions() {
+    public ResponseEntity<List<TransactionDto>> getAllTransactions() {
         return ResponseEntity.ok(transactionService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
+    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.findById(id));
     }
 
     @GetMapping("/{id}/agent")
-    public ResponseEntity<List<Transaction>> getTransactionsByAgent(@PathVariable Long id) {
+    public ResponseEntity<List<TransactionDto>> getTransactionsByAgent(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.findByAgent(id));
     }
 }
