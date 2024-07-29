@@ -25,10 +25,15 @@ public class TransactionMapper {
 
     public TransactionDto toTransactionDto(Transaction transaction){
         return TransactionDto.builder()
+                .id(transaction.getId())
                 .amount(transaction.getAmount())
                 .note(transaction.getNote())
                 .customerOtp(transaction.getCustomerOtp())
                 .type(transaction.getType())
+                .createDate(transaction.getCreateDate())
+                .updateDate(transaction.getUpdateDate())
+                .customerPhoneNumber(transaction.getCustomerPhoneNumber())
+                .customerName(transaction.getCustomerName())
                 .build();
     }
 

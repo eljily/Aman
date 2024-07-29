@@ -2,7 +2,6 @@ package com.sidibrahim.Aman.controller;
 
 import com.sidibrahim.Aman.dto.UserDto;
 import com.sidibrahim.Aman.service.UserService;
-import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,6 @@ public class UserController {
     }
 
     @PostMapping
-    @Transactional
     @PreAuthorize("!hasAuthority('AGENT')")
     public ResponseEntity<UserDto> save(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.addUser(userDto));
