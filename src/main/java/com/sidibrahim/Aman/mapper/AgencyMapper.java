@@ -21,9 +21,11 @@ public class AgencyMapper {
 
     public AgencyDto toAgencyDto(Agency agency) {
         return AgencyDto.builder()
+                .id(agency.getId())
                 .name(agency.getName())
                 .agencyCode(agency.getAgencyCode())
                 .address(agency.getAddress())
+                .createDate(agency.getCreateDate())
                 .build();
     }
 
