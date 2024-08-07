@@ -1,14 +1,17 @@
 package com.sidibrahim.Aman.controller;
 
 import com.sidibrahim.Aman.dto.AgencyDto;
+import com.sidibrahim.Aman.dto.ResponseMessage;
 import com.sidibrahim.Aman.entity.Agency;
 import com.sidibrahim.Aman.exception.GenericException;
 import com.sidibrahim.Aman.mapper.AgencyMapper;
 import com.sidibrahim.Aman.repository.AgencyRepository;
 import com.sidibrahim.Aman.service.AgencyService;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,31 +32,51 @@ public class AgencyController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
-    public ResponseEntity<List<AgencyDto>> getAll() {
-        return ResponseEntity.ok(agencyService.getAll());
+    public ResponseEntity<ResponseMessage> getAll() {
+        return ResponseEntity.ok(ResponseMessage
+                .builder()
+                .status(HttpStatus.OK.value())
+                .message("Agencies Retrieved successfully")
+                .data(agencyService.getAll())
+                .build());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
-    public ResponseEntity<AgencyDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(agencyService.getById(id));
+    public ResponseEntity<ResponseMessage> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(ResponseMessage
+                .builder()
+                .status(HttpStatus.OK.value())
+                .message("Agency Retrieved successfully")
+                .data(agencyService.getById(id))
+                .build());
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public ResponseEntity<AgencyDto> addAgency(@RequestBody Agency agency) {
-        return ResponseEntity.ok(agencyService.save(agency));
+    public ResponseEntity<ResponseMessage> addAgency(@RequestBody Agency agency) {
+        return ResponseEntity.ok(ResponseMessage
+                .builder()
+                .message("Agency Added successfully")
+                .status(HttpStatus.OK.value())
+                .data(agencyService.save(agency))
+                .build());
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
-    public ResponseEntity<?> deleteAgency(@PathVariable Long id) {
+    public ResponseEntity<ResponseMessage> deleteAgency(@PathVariable Long id) {
         Optional<Agency> agency = agencyRepository.findById(id);
-        if (agency.isPresent()) {
-            agencyService.deleteById(id);
-            return ResponseEntity.ok("Agency Deleted Successfully");
-        }
-        return ResponseEntity.ok("Agency Does Not Exist");
+        return agency.isPresent()?ResponseEntity.ok(ResponseMessage.builder()
+                .message("Agency Does Not Exist")
+                .status(HttpStatus.OK.value())
+                .build())
+                :
+                ResponseEntity.ok(ResponseMessage
+                .builder()
+                .status(HttpStatus.OK.value())
+                .message("Agency Deleted Successfully")
+                .build());
     }
 
     @PutMapping("/{id}")
