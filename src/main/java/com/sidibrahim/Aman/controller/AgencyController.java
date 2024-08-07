@@ -7,6 +7,7 @@ import com.sidibrahim.Aman.exception.GenericException;
 import com.sidibrahim.Aman.mapper.AgencyMapper;
 import com.sidibrahim.Aman.repository.AgencyRepository;
 import com.sidibrahim.Aman.service.AgencyService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,21 +68,26 @@ public class AgencyController {
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
     public ResponseEntity<ResponseMessage> deleteAgency(@PathVariable Long id) {
         Optional<Agency> agency = agencyRepository.findById(id);
-        return agency.isPresent()?ResponseEntity.ok(ResponseMessage.builder()
-                .message("Agency Does Not Exist")
-                .status(HttpStatus.OK.value())
-                .build())
-                :
-                ResponseEntity.ok(ResponseMessage
-                .builder()
-                .status(HttpStatus.OK.value())
-                .message("Agency Deleted Successfully")
-                .build());
+
+        if (agency.isEmpty()) {
+            ResponseMessage responseMessage = ResponseMessage.builder()
+                    .message("Agency Does Not Exist")
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMessage);
+        } else {
+            agencyService.deleteById(id);
+            ResponseMessage responseMessage = ResponseMessage.builder()
+                    .message("Agency Deleted Successfully")
+                    .status(HttpStatus.OK.value())
+                    .build();
+            return ResponseEntity.ok(responseMessage);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public ResponseEntity<AgencyDto> updateAgency(@PathVariable Long id, @RequestBody Agency updatedAgency) {
+    public ResponseEntity<ResponseMessage> updateAgency(@PathVariable Long id, @RequestBody Agency updatedAgency) {
         Optional<Agency> optionalAgency = agencyRepository.findById(id);
         if (optionalAgency.isEmpty()) {
             throw new GenericException("Agency not found");
@@ -92,6 +98,11 @@ public class AgencyController {
         agencyToUpdate.setAddress(updatedAgency.getAddress() != null ? updatedAgency.getAddress() : agencyToUpdate.getAddress());
 
         Agency savedAgency = agencyRepository.save(agencyToUpdate);
-        return ResponseEntity.ok(agencyMapper.toAgencyDto(savedAgency));
+        return ResponseEntity.ok(ResponseMessage
+                .builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Agency Updated Successfully ")
+                        .data(agencyMapper.toAgencyDto(savedAgency))
+                .build());
     }
 }
