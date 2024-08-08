@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Service
 public class TransactionService {
 
@@ -40,14 +41,15 @@ public class TransactionService {
         return transactionMapper
                 .toTransactionDto(transactionRepository
                         .findById(id)
-                        .orElseThrow(()->new GenericException("User Not Found")));
+                        .orElseThrow(() -> new GenericException("Transaction Not Found")));
     }
 
     public void delete(Long id) {
-        transactionRepository.deleteById(id);
+        Transaction transaction = transactionRepository.findById(id).orElseThrow(() -> new GenericException("Transaction Not Found"));
+        transactionRepository.deleteById(transaction.getId());
     }
 
-    public List<TransactionDto> findByAgent(Long id) {
+    public List<TransactionDto> findByAgentId(Long id) {
         return transactionMapper.toTransactionDtos(transactionRepository.findByAgentId(id));
     }
 }
