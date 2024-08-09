@@ -42,4 +42,6 @@ public class Agency {
 
     @UpdateTimestamp
     private LocalDate updateDate;
+
+    private Boolean isDeleted;
 }

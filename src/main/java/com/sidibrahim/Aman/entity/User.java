@@ -47,6 +47,8 @@ public class User implements UserDetails {
 
     private boolean isEnabled = true;
 
+    private Boolean isDeleted;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(role.toString()));

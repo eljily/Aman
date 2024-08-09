@@ -35,4 +35,6 @@ public class Transaction {
     @JoinColumn(name = "agent_id")
     private User agent;
 
+    private Boolean isDeleted;
+
 }
