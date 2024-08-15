@@ -2,7 +2,9 @@ package com.sidibrahim.Aman.controller;
 
 import com.sidibrahim.Aman.dto.ResponseMessage;
 import com.sidibrahim.Aman.dto.UserDto;
+import com.sidibrahim.Aman.dto.request.UserToAgencyDto;
 import com.sidibrahim.Aman.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +42,17 @@ public class UserController {
                 .message("User Saved Successfully")
                 .status(HttpStatus.OK.value())
                 .data(userService.addUser(userDto))
+                .build());
+    }
+
+    @PostMapping("/add-to-agency")
+    @PreAuthorize("!hasAuthority('AGENT')")
+    public ResponseEntity<ResponseMessage> addUserToAgency(@RequestBody UserToAgencyDto userToAgencyDto) {
+
+        return ResponseEntity.ok(ResponseMessage
+                .builder()
+                        .message(userService.addUserToAgency(userToAgencyDto))
+                        .status(HttpStatus.OK.value())
                 .build());
     }
 }

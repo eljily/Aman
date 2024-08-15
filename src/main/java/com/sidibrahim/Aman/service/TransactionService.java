@@ -52,4 +52,8 @@ public class TransactionService {
     public List<TransactionDto> findByAgentId(Long id) {
         return transactionMapper.toTransactionDtos(transactionRepository.findByAgentId(id));
     }
+
+    public List<TransactionDto> findByAgencyId(Long id){
+        return transactionMapper.toTransactionDtos(transactionRepository.findByAgency_Id(id));
+    }
 }

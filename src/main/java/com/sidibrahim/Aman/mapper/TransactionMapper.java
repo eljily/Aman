@@ -34,6 +34,7 @@ public class TransactionMapper {
                 .updateDate(transaction.getUpdateDate())
                 .customerPhoneNumber(transaction.getCustomerPhoneNumber())
                 .customerName(transaction.getCustomerName())
+                .agencyId(transaction.getAgency()!=null?transaction.getAgency().getId():null)
                 .build();
     }
 

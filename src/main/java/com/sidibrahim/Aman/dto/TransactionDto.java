@@ -21,4 +21,5 @@ public class TransactionDto {
     private BigDecimal amount;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+    private Long agencyId;
 }

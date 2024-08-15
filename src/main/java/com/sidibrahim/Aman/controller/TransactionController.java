@@ -70,4 +70,14 @@ public class TransactionController {
                 .status(HttpStatus.OK.value())
                 .build());
     }
+
+    @GetMapping("/agencies/{agencyId}")
+    public ResponseEntity<ResponseMessage> retrieveTransactionsByAgencyId(@PathVariable Long agencyId) {
+        return ResponseEntity.ok(ResponseMessage
+                .builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Successfully retrieved transactions for agency")
+                        .data(transactionService.findByAgencyId(agencyId))
+                .build());
+    }
 }
